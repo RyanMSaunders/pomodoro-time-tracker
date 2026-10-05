@@ -1,0 +1,6 @@
+.env,
+.env.* (except .env.example), 
+application-local.yml, 
+target/, 
+node_modules/, 
+coverage/
