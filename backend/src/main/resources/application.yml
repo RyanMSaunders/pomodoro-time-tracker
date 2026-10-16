@@ -1,1 +1,3 @@
-spring:\n  application:\n    name: pomo
+  spring:
+    application:
+      name: pomo
