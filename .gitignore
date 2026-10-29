@@ -5,3 +5,5 @@ application-local.yml
 target/
 node_modules/
 coverage/
+.ignore
+docs/
