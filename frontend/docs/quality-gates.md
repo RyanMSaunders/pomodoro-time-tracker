@@ -14,8 +14,8 @@ at the first failure. It exits 0 only if all five pass.
 
 | # | Gate         | Script                  | Tool                  | What it enforces                                      |
 |---|--------------|-------------------------|-----------------------|-------------------------------------------------------|
-| 1 | Lint         | `pnpm run lint`         | ESLint (flat config)  | typescript-eslint, React hooks and refresh rules      |
-| 2 | Format check | `pnpm run format:check` | Prettier              | Consistent formatting (`semi: false`, single quotes)  |
+| 1 | Lint         | `pnpm run lint`         | ESLint 9 (flat config) + airbnb-extended | Airbnb, TypeScript, React, hooks, jsx-a11y, import and Vitest rules. Runs with `--max-warnings 0`, so warnings fail. |
+| 2 | Format check | `pnpm run format:check` | Prettier              | Consistent formatting (`.prettierrc`: single quotes, semicolons, no trailing commas, 80 columns) |
 | 3 | Typecheck    | `pnpm run typecheck`    | `tsc -b`              | Strict type checking across all referenced projects   |
 | 4 | Test + coverage | `pnpm run test:coverage` | Vitest + v8 coverage | Tests pass and coverage meets the 80% thresholds   |
 | 5 | Build        | `pnpm run build`        | `vite build`          | Production bundle compiles into `dist/`               |
@@ -33,21 +33,53 @@ and `test` (single run, no coverage).
 | Vite                       | 8.3.4     |
 | Vitest                     | 5.0.5     |
 | @vitest/coverage-v8        | _must match Vitest exactly_ |
-| React / React DOM          | _x.y.z_   |
-| TypeScript                 | _x.y.z_   |
-| ESLint                     | _x.y.z_   |
-| typescript-eslint          | _x.y.z_   |
-| Prettier                   | _x.y.z_   |
-| eslint-config-prettier     | _x.y.z_   |
-| jsdom                      | _x.y.z_   |
-| @testing-library/react     | _x.y.z_   |
-| @testing-library/dom       | _x.y.z_   |
-| @testing-library/jest-dom  | _x.y.z_   |
+| React / React DOM          | 19.3.1    |
+| TypeScript                 | 6.0.3     |
+| ESLint                     | 9.39.5 (held below 10, see "Linting") |
+| @eslint/js                 | 9.39.5 (must match ESLint) |
+| eslint-config-airbnb-extended | 3.3.0  |
+| typescript-eslint          | 8.72.0    |
+| @vitest/eslint-plugin      | 1.6.28    |
+| eslint-plugin-react-refresh | 0.5.7    |
+| Prettier                   | 3.9.10    |
+| eslint-config-prettier     | 10.1.8    |
+| jsdom                      | 30.1.3    |
+| @testing-library/react     | 16.3.3    |
+| @testing-library/dom       | 10.4.2    |
+| @testing-library/jest-dom  | 7.0.1     |
 
-Versions are locked by `pnpm-lock.yaml` (committed). `.npmrc` sets
+These are the versions resolved at the time of writing. Versions are locked by
+`pnpm-lock.yaml` (committed), which is the source of truth. `.npmrc` sets
 `engine-strict=true`, so installs fail on the wrong Node version. CI and
 Docker must use Node 24 and pnpm (via `corepack enable`), and install with
 `pnpm install --frozen-lockfile`.
+
+### Linting
+
+Configured in `eslint.config.js` (flat config). The rules start from
+`eslint-config-airbnb-extended`, plus project overrides. Full explanation and
+the rule-by-rule decisions are in `docs/eslint-learning-reference.md`.
+
+- **ESLint is held at 9.** Airbnb-extended, `eslint-plugin-react`,
+  `eslint-plugin-import` and `eslint-plugin-jsx-a11y` do not declare ESLint 10
+  support, and `eslint-plugin-react` crashes on it. ESLint 9.39.5 is marked
+  "no longer supported" by npm, so revisit when those plugins support 10. Do
+  not run `pnpm update --latest` without checking.
+- **`--max-warnings 0`:** a `warn` rule fails `lint`, `verify` and the
+  pre-commit hook, so `warn` is effectively "fix before merging".
+- **Import rules use the `import-x/` prefix** (airbnb-extended uses
+  `eslint-plugin-import-x`).
+- **Plugins come from airbnb-extended.** Do not add `eslint-plugin-react`,
+  `-jsx-a11y`, `-import` or `-react-hooks` to `package.json` separately, to
+  avoid two copies of a plugin.
+- **Tests** get the `@vitest/eslint-plugin` recommended rules.
+- **Ignored:** `dist`, `coverage` and `docs` (the `docs/linting/*.js` template
+  files are CommonJS and are reference only).
+- **Default exports** are expected (`import-x/prefer-default-export`), and
+  object shapes use `interface`.
+- **MUI:** `!important` inside an `sx` prop is a warning.
+- Underscore-prefixed names are ignored by `no-unused-vars` for parameters and
+  destructuring, but `no-underscore-dangle` still rejects `const _x`.
 
 ### Coverage
 

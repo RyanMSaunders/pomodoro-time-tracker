@@ -46,6 +46,21 @@ Here is the merged reference, with `verify` and the daily essentials at the top.
 | `pnpm run verify` | all | Runs gates 1 to 5 in order and exits 0 only if all pass. |
 | `pnpm run verify; echo "exit: $?"` | all | Same, but prints the exit code so you can prove it is 0. |
 
+## Linting
+
+| Command | What it does |
+|---|---|
+| `pnpm run lint` | Runs ESLint with `--max-warnings 0`, so any warning also fails. |
+| `pnpm run lint; echo "exit: $?"` | Same, and prints the exit code so you can prove it is 0 (or 1 on a violation). |
+| `pnpm exec eslint --print-config src/components/Greeting.tsx` | Prints the final merged config for one file. Use it when a rule is not behaving as expected. |
+| `pnpm exec eslint . --fix-dry-run` | Previews what `--fix` would change without writing files. |
+| `pnpm exec eslint . --format json` | Machine-readable output. |
+| `pnpm exec eslint --version` | Should print v9.39.x (the repo is held below ESLint 10). |
+| `pnpm why eslint` | Shows what depends on ESLint. It should report one version. |
+
+See `docs/eslint-learning-reference.md` for rule decisions and a table of
+probes to confirm each rule fires.
+
 ## Inspecting scripts
 
 | Command | What it does |
