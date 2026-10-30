@@ -127,5 +127,12 @@ export default defineConfig([
   {
     files: ['*.config.{js,mjs,cjs,ts}'],
     languageOptions: { globals: globals.node }
+  },
+  {
+    // Node CLI scripts: need Node globals, and printing to the console is
+    // their whole purpose.
+    files: ['scripts/**/*.{js,mjs,cjs}'],
+    languageOptions: { globals: globals.node },
+    rules: { 'no-console': 'off' }
   }
 ]);
