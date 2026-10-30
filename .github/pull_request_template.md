@@ -1,12 +1,21 @@
-## What changed
-<!-- Brief summary and why -->
+## Ticket
+  `TODO: Link to ticket`
 
-## How it was tested
-<!-- Manual steps, new/updated tests -->
+## Reasons for changes
+  `TODO: High level one sentence overview of story with link to the story`
 
-## Checklist
-- [ ] `pnpm verify` passes (frontend)
-- [ ] `./mvnw verify` passes (backend)
-- [ ] New or changed env vars are reflected in `.env.example`
-- [ ] Docs updated (README / `docs/`) if behavior or setup changed
-- [ ] No secrets, credentials, or `.env` files included
+## Changes
+- Concise done whens of story
+
+## Display Size Testing
+- [ ] I have tested this change on desktop
+
+## New Tests
+- [ ] I have added tests, described below:
+- [x] I chosen not to add tests, for this reason:
+  `TODO: describe your tests, or give your reason for not writing any`
+
+## Screenshots
+| Before | After |
+| ------ | ------ |
+|        |        |
