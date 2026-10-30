@@ -6,7 +6,7 @@ describe('Greeting', () => {
   it('greets the given name', () => {
     render(<Greeting name="Pomo" />);
     expect(
-      screen.getByRole('heading', { name: 'Hello, Pomo!     ' })
+      screen.getByRole('heading', { name: 'Hello, Pomo!' })
     ).toBeInTheDocument();
   });
 });
