@@ -20,20 +20,38 @@ One-sentence description: a Pomodoro timer and time tracker (TODO: add what make
 
 ## Prerequisites
 
-- Node.js TODO version and pnpm TODO version
+- Node.js 24 (`engines` is `>=24 <25` and `engine-strict` is on). Use `nvm use` to switch.
+- pnpm 12, pinned by the `packageManager` field in `frontend/package.json`. Enable it with `corepack enable`.
 - Java TODO version (Maven wrapper is included: `./mvnw`)
 - Docker (TODO: if used for the local database)
 
 ## Getting Started
 
-1. Clone the repo and install root dependencies (this also sets up the Husky hooks):
+The root and `frontend/` are **separate pnpm projects**, each with its own `pnpm-lock.yaml` and `node_modules`. They are not a pnpm workspace, so installing in one does not install the other. Run both installs, in this order, from a clean checkout or new worktree:
+
+1. Use the right Node version:
+   `nvm use` (must be Node 24)
+2. Install root dependencies (this also sets up the Husky hooks):
    `pnpm install`
-2. Install frontend dependencies:
-   `cd frontend && pnpm install`
-3. Copy the env templates and fill in values:
+3. Install frontend dependencies:
+   `cd frontend && pnpm install --frozen-lockfile`
+4. Copy the env templates and fill in values:
    `cp frontend/.env.example frontend/.env`
    `cp backend/.env.example backend/.env`
-4. Start the app (TODO: exact commands for the backend and frontend).
+5. Check the setup: `pnpm --dir frontend verify`
+6. Start the app (TODO: exact commands for the backend and frontend).
+
+### New git worktree
+
+`node_modules`, `.env` files, and `coverage/` are untracked, so a new worktree starts without them. Repeat the steps above in the new worktree. Do not copy or symlink `node_modules` from another checkout.
+
+### Troubleshooting
+
+- **`Cannot find native binding` / `Cannot find module '@rolldown/binding-...'`** (from Vitest or Vite): the platform-specific native binary was not installed. This usually means `node_modules` came from an interrupted install or a different CPU architecture. Fix it with a clean reinstall:
+  `cd frontend && rm -rf node_modules && pnpm install --frozen-lockfile`
+  Also check that `node -p "process.arch"` prints `arm64` on Apple Silicon (not `x64` from a Rosetta Node).
+- **`Node 24 required`** or an engine error: run `nvm use`, then reinstall.
+- **`prettier --check` fails**: run `pnpm --dir frontend format`.
 
 ## Environment Variables
 
@@ -53,7 +71,7 @@ Real values live in untracked `.env` files. Never commit them.
 |---|---|
 | Frontend lint | `pnpm --dir frontend lint` |
 | Frontend format | `pnpm --dir frontend format` |
-| Frontend full check | `pnpm --dir frontend verify` (TODO: confirm the script exists) |
+| Frontend full check | `pnpm --dir frontend verify` (lint, format check, typecheck, tests with coverage, build) |
 | Backend full check | `cd backend && ./mvnw verify` |
 
 ## Code Quality and Guardrails
