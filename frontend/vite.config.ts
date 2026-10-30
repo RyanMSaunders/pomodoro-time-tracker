@@ -1,5 +1,5 @@
-import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vitest/config';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -14,15 +14,15 @@ export default defineConfig({
         'src/main.tsx',
         'src/**/*.test.{ts,tsx}',
         'src/test/**',
-        'src/**/*.d.ts',
+        'src/**/*.d.ts'
       ],
       reporter: ['text', 'html'],
       thresholds: {
         lines: 80,
         statements: 80,
         functions: 80,
-        branches: 80,
-      },
-    },
-  },
-})
+        branches: 80
+      }
+    }
+  }
+});
